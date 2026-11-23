@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RAB Guard &bull; Construction Cost Review &amp; Audit System</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/tailwind.css">
+  <link rel="stylesheet" href="css/rab-guard-workspace.css">
+  <link rel="stylesheet" href="css/source-viewer.css">
+</head>
+<body class="rg-body">
+
+  <div class="rg-app-shell flex min-h-screen bg-slate-50 text-slate-900">
+    <aside class="rg-sidebar sticky top-0 flex h-screen flex-col border-r bg-white" aria-label="Navigasi RAB Guard">
+      <div class="brand-area rg-brand-area">
+        <div class="brand-logo">RG</div>
+        <div class="brand-titles">
+          <h1>RAB Guard</h1>
+          <p>Construction Cost Review</p>
+        </div>
+      </div>
+
+      <div class="rg-sidebar-label">MENU UTAMA</div>
+      <nav class="nav-tabs-container rg-sidebar-nav" aria-label="Navigasi utama">
+        <div class="nav-tabs" id="main-nav-tabs">
+      <button class="tab-btn active" data-tab="tab-ingestion" id="nav-btn-ingestion">
+        <span class="rg-nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h5"/></svg></span>Berkas &amp; Pemetaan
+      </button>
+      <div class="rg-nav-entry"><button class="tab-btn" data-tab="tab-ringkasan" id="nav-btn-ringkasan" disabled title="Unggah berkas terlebih dahulu untuk membuka bagian ini">
+        <span class="rg-nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="5" rx="1.5"/><rect x="13" y="10" width="8" height="11" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/></svg></span>Ringkasan Proyek
+      </button><span class="rg-nav-reason" aria-hidden="true">Unggah berkas terlebih dahulu untuk membuka bagian ini</span></div>
+      <div class="rg-nav-entry"><button class="tab-btn" data-tab="tab-pekerjaan" id="nav-btn-pekerjaan" disabled title="Unggah berkas terlebih dahulu untuk membuka bagian ini">
+        <span class="rg-nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11"/><path d="m3 6 1.5 1.5L7 5M3 12l1.5 1.5L7 11M3 18l1.5 1.5L7 17"/></svg></span>Daftar Pekerjaan
+      </button><span class="rg-nav-reason" aria-hidden="true">Unggah berkas terlebih dahulu untuk membuka bagian ini</span></div>
+      <div class="rg-nav-entry"><button class="tab-btn" data-tab="tab-audit" id="nav-btn-audit" disabled title="Unggah berkas terlebih dahulu untuk membuka bagian ini">
+        <span class="rg-nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z"/><path d="m9 12 2 2 4-4"/></svg></span>Pemeriksaan &amp; Audit <span class="tab-badge" id="badge-nav-audit" style="display: none;">0</span>
+      </button><span class="rg-nav-reason" aria-hidden="true">Unggah berkas terlebih dahulu untuk membuka bagian ini</span></div>
+      <div class="rg-nav-entry"><button class="tab-btn" data-tab="tab-simulasi" id="nav-btn-simulasi" disabled title="Unggah berkas terlebih dahulu untuk membuka bagian ini">
+        <span class="rg-nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3v18h18"/><path d="m7 14 4-4 3 3 6-7"/></svg></span>Simulasi Biaya
+      </button><span class="rg-nav-reason" aria-hidden="true">Unggah berkas terlebih dahulu untuk membuka bagian ini</span></div>
+    </div>
+      </nav>
+
+      <div class="rg-sidebar-label">ANALISIS TAMBAHAN</div>
+      <nav class="nav-tabs-container rg-sidebar-nav" aria-label="Analisis tambahan">
+        <div class="nav-tabs">
+          <div class="rg-nav-entry"><button class="tab-btn" data-tab="tab-unit-consistency" id="nav-btn-unit-consistency" disabled title="Jalankan audit workbook terlebih dahulu">
+            <span class="rg-nav-icon" aria-hidden="true">↔</span>Pengecekan Satuan
+          </button><span class="rg-nav-reason" aria-hidden="true">Jalankan audit workbook terlebih dahulu</span></div>
+          <div class="rg-nav-entry"><button class="tab-btn" data-tab="tab-material-logistics" id="nav-btn-material-logistics" disabled title="Jalankan audit workbook terlebih dahulu">
+            <span class="rg-nav-icon" aria-hidden="true">▦</span>Rekap Kebutuhan Material
+          </button><span class="rg-nav-reason" aria-hidden="true">Jalankan audit workbook terlebih dahulu</span></div>
+          <button class="tab-btn" data-tab="tab-pricing-risk" id="nav-btn-pricing-risk">
+            <span class="rg-nav-icon" aria-hidden="true">↗</span>Analisis Ketimpangan Harga
+          </button>
+          <button class="tab-btn" data-tab="tab-rab-comparison" id="nav-btn-rab-comparison">
+            <span class="rg-nav-icon" aria-hidden="true">⇄</span>Komparasi RAB (CCO)
+          </button>
+          <button class="tab-btn" data-tab="tab-reporting" id="nav-btn-reporting">
+            <span class="rg-nav-icon" aria-hidden="true">▤</span>Laporan &amp; Ekspor
+          </button>
+        </div>
+      </nav>
+
+      <div class="rg-sidebar-utility">
+        <button class="tab-btn rg-feedback-action" type="button" data-tab="tab-feedback" id="nav-btn-feedback"
+          aria-describedby="nav-feedback-description" title="Kritik, saran, atau laporkan kendala">
+          <span class="rg-feedback-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M21 11.5a8.5 8.5 0 0 1-12.2 7.6L3 21l1.9-5.8A8.5 8.5 0 1 1 21 11.5Z"/><path d="M12 8v7M8.5 11.5h7"/></svg></span>
+          <span class="rg-feedback-copy"><span class="rg-feedback-title">Kirim Masukan</span><span class="rg-feedback-description" id="nav-feedback-description">Kritik, saran, atau laporkan kendala</span></span>
+        </button>
+      </div>
+
+      <div class="rg-sidebar-footer">
+        <div class="rg-local-status"><span class="dot"></span> Mode lokal</div>
+        <p>Ruang kerja pemeriksaan RAB</p>
+      </div>
+    </aside>
+
+    <div class="rg-main-column flex min-h-screen min-w-0 flex-1 flex-col">
+      <header class="app-header rg-topbar bg-slate-900 text-amber-50">
+        <div class="rg-topbar-title">
+          <span class="rg-eyebrow text-amber-200">CONSTRUCTION COST REVIEW</span>
+          <h1 class="text-3xl font-bold">Workspace RAB</h1>
+          <p class="text-sm text-amber-200">Tinjau data, hitungan, dan temuan dalam satu alur kerja.</p>
+        </div>
+        <div class="header-badges">
+          <span class="badge badge-status-ok" id="active-doc-badge" style="display: none;">
+            <span class="dot"></span> <span id="active-doc-name">Dokumen Aktif</span>
+          </span>
+          <button type="button" class="sample-btn rg-btn rg-btn-secondary" id="btn-switch-doc" style="display: none;">
+            Ganti Berkas
+          </button>
+        </div>
+      </header>
+  <!-- Main Container -->
+  <main class="main-content rg-content mx-auto w-full max-w-[1480px] flex-1 px-8 py-7">
+
+    <!-- TAB 1: Ingestion & Setup -->
+    <section class="tab-panel active" id="tab-ingestion">
+      <div class="rg-page-heading">
+        <div>
+          <span class="rg-eyebrow">RAB GUARD / WORKSPACE</span>
+          <h2>Berkas & Pemetaan</h2>
+          <p>Unggah workbook RAB untuk memeriksa seluruh worksheet dan menjalankan audit terkonsolidasi.</p>
+        </div>
+      </div>
+
+      <!-- Compact workspace introduction -->
+      <div class="banner banner-success rg-welcome-panel">
+        <div class="rg-welcome-copy">
+          <h2 class="welcome-title">Periksa RAB dengan lebih terarah.</h2>
+          <p class="welcome-desc">Tinjau perhitungan, formula, kode pekerjaan, dan satuan dalam satu alur pemeriksaan.</p>
+        </div>
+        <ul class="welcome-benefits">
+          <li>Pemeriksaan perhitungan</li>
+          <li>Penelusuran formula</li>
+          <li>Konsistensi kode dan satuan</li>
+        </ul>
+      </div>
+
+      <!-- File Upload Dropzone -->
+      <div class="upload-dropzone rg-dropzone" id="universal-dropzone">
+        <div class="upload-icon" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M24 32V8m0 0-9 9m9-9 9 9M9 30v8a4 4 0 0 0 4 4h22a4 4 0 0 0 4-4v-8"/></svg></div>
+        <div class="upload-title">Tarik &amp; Letakkan Berkas Excel RAB ke Sini</div>
+        <div class="upload-hint">Format yang didukung: .xlsx, .xlsm, .xls &bull; Maks. 50 MB &bull; Pemrosesan dilakukan di browser</div>
+        <input type="file" id="universal-file-input" accept=".xlsx,.xlsm,.xls,.xlsb" style="display: none;">
+        <button type="button" class="tab-btn active" id="btn-browse-file" style="margin: 0 auto; cursor: pointer; padding: 10px 24px; font-weight: 700;">
+          Pilih Berkas Excel dari Komputer
+        </button>
+      </div>
+
+      <!-- Ingestion Stage 2: Inspection & Mapping Interface (Shown after file or demo selected) -->
+      <div id="ingestion-stage-2" style="display: none; border-top: 2px dashed var(--border-strong); padding-top: 28px; margin-top: 28px;">
+        
+        <!-- Live File Info Box -->
+        <div class="project-meta-box" id="universal-meta-box">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+            <div>
+              <h2 class="project-meta-title" id="universal-filename">Nama Berkas</h2>
+              <p class="project-meta-desc" id="universal-file-info">Ukuran berkas, jumlah sheet</p>
+            </div>
+            <div>
+              <span class="badge badge-status-ok">Workbook Berhasil Dibaca</span>
+            </div>
+          </div>
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border);">
+            <p id="workbook-confirmation-status" role="status" style="margin: 0; font-size: 13px; color: var(--text-muted);">Pilih atau tinjau sheet sebelum melanjutkan.</p>
+            <button type="button" class="tab-btn active" id="btn-confirm-workbook" disabled style="cursor: pointer; padding: 9px 18px; font-weight: 700;">
+              AUDIT SELURUH WORKBOOK
+            </button>
+          </div>
+        </div>
+
+        <!-- Workbook Sheets & Roles Table -->
+        <div class="table-container" id="universal-sheets-container">
+          <div class="table-header-bar">
+            <h3 class="table-header-title">1. Lembar Kerja (Worksheets) Terdeteksi</h3>
+            <span class="badge badge-offline">Inspeksi Struktur</span>
+          </div>
+          <p id="sheet-selection-notice" role="status" style="padding: 0 16px; color: var(--text-muted);"></p>
+          <div class="table-responsive">
+            <table class="data-table" id="table-universal-sheets">
+              <thead>
+                <tr>
+                  <th>Nama Lembar</th>
+                  <th>Dimensi &amp; Rentang</th>
+                  <th class="num-col">Jumlah Sel / Formula</th>
+                  <th>Peran Terdeteksi</th>
+                  <th class="center-col">Keyakinan</th>
+                  <th class="center-col">Status Pra-audit</th>
+                </tr>
+              </thead>
+              <tbody id="tbody-universal-sheets"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Sample Rows Sheet Preview Table -->
+        <div class="table-container" id="universal-preview-container">
+          <div class="table-header-bar">
+            <h3 class="table-header-title">2. Pratinjau Data: <span id="preview-sheet-name">-</span> (15 Baris Pertama)</h3>
+            <span class="badge badge-frozen">Read-Only Preview</span>
+          </div>
+          <div class="table-responsive" style="max-height: 280px; overflow-y: auto;">
+            <table class="data-table" id="table-universal-preview">
+              <thead id="thead-universal-preview"></thead>
+              <tbody id="tbody-universal-preview"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Column Mapping Interface -->
+        <div class="project-meta-box" id="universal-mapping-container" style="background: #ffffff; border: 1px solid var(--border);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
+            <div>
+              <h3 style="font-size: 16px; font-weight: 700; color: var(--primary);">3. Konfigurasi Pemetaan Kolom Kanonikal</h3>
+              <p style="font-size: 13px; color: var(--text-muted);" id="mapping-header-info">Deteksi baris header otomatis</p>
+              <div id="header-correction-controls" style="display: none; margin-top: 8px;">
+                <label for="header-row-choice" style="font-size: 13px;">Baris header:</label>
+                <select id="header-row-choice" aria-label="Pilih baris header"></select>
+                <button type="button" class="sample-btn" id="btn-confirm-header-row">Gunakan Baris Ini</button>
+              </div>
+            </div>
+            <div>
+              <button type="button" class="tab-btn active" id="btn-run-universal-audit" disabled style="font-weight: 700; cursor: pointer; padding: 10px 24px; font-size: 14px; background: #0f766e;">
+                ✓ Konfirmasi Pemetaan &amp; Jalankan Audit
+              </button>
+              <p id="mapping-action-status" role="status" style="margin: 8px 0 0; max-width: 360px; font-size: 12px; color: var(--text-muted);">Konfirmasi workbook dan selesaikan pemetaan wajib untuk menjalankan audit.</p>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="data-table" id="table-universal-mapping">
+              <thead>
+                <tr>
+                  <th style="width: 200px;">Kolom Standar RAB</th>
+                  <th style="width: 250px;">Dipetakan ke Kolom Excel</th>
+                  <th style="width: 250px;">Header Asli Excel</th>
+                  <th>Status Wajib / Catatan</th>
+                </tr>
+              </thead>
+              <tbody id="tbody-universal-mapping"></tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- TAB 2: Dynamic Project Summary (Ringkasan) -->
+    <section class="tab-panel" id="tab-ringkasan">
+      <div class="rg-page-heading">
+        <div>
+          <span class="rg-eyebrow">RAB GUARD / WORKSPACE</span>
+          <h2>Ringkasan Proyek</h2>
+          <p>Ikhtisar nilai anggaran, data pekerjaan, dan kondisi workbook yang sedang diperiksa.</p>
+        </div>
+      </div>
+      
+      <!-- Project Metadata Card -->
+      <div class="project-meta-box">
+        <h2 class="project-meta-title" id="meta-summary-project">Nama Dokumen</h2>
+        <p class="project-meta-desc">Dokumen Rencana Anggaran Biaya (RAB) yang sedang aktif diinspeksi.</p>
+        <div class="meta-grid">
+          <div class="meta-item">
+            <span class="meta-label">Lembar Kerja Terpilih</span>
+            <span class="meta-val" id="meta-summary-sheet">-</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Waktu Audit Mandiri</span>
+            <span class="meta-val" id="meta-summary-date">-</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Skor Kelengkapan Struktur</span>
+            <span class="meta-val" id="meta-summary-score" style="color: var(--color-success); font-weight: 700;">—</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Toleransi Matematis</span>
+            <span class="meta-val">Rp0,01</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- KPI Summary Cards -->
+      <div class="grid-cards gap-4" style="margin-bottom: 24px;">
+        <div class="card border-t-4 border-[var(--primary)] bg-white shadow-sm">
+          <div class="card-title">Total Hitung Ulang (Volume × Harga)</div>
+          <div class="card-value" id="kpi-total-anggaran" style="font-size: 18px; color: var(--primary);">-</div>
+          <div class="card-subtitle">Jumlah sumber dan cakupan hitung ulang ditampilkan di bawah</div>
+        </div>
+        <div class="card" style="border-top: 4px solid #0284c7;">
+          <div class="card-title">Item Pekerjaan</div>
+          <div class="card-value" id="kpi-total-items">-</div>
+          <div class="card-subtitle">Baris pekerjaan teridentifikasi</div>
+        </div>
+        <div class="card" style="border-top: 4px solid var(--color-tinjau);">
+          <div class="card-title">Temuan Pemeriksaan</div>
+          <div class="card-value" id="kpi-total-temuan" style="font-size: 16px;">-</div>
+          <div class="card-subtitle">Anomali &amp; deviasi formula</div>
+        </div>
+        <div class="card" style="border-top: 4px solid var(--color-success);">
+          <div class="card-title">Status Integritas Data</div>
+          <div class="card-value" id="kpi-integritas-status" style="font-size: 15px; font-weight: 700;">MEMERIKSA</div>
+          <div class="card-subtitle">Berdasarkan aturan pemeriksaan aktif</div>
+        </div>
+      </div>
+
+      <!-- Subtotal Breakdown Table (if subtotals exist in active sheet) -->
+      <div class="table-container" id="container-subtotals-breakdown" style="display: none; margin-bottom: 24px;">
+        <div class="table-header-bar">
+          <h3 class="table-header-title">Subtotal Bagian Pekerjaan Terdeteksi</h3>
+          <span class="badge badge-offline">Struktur Dokumen</span>
+        </div>
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Uraian Bagian / Subtotal</th>
+                <th style="width: 140px;" class="center-col">Sel Excel</th>
+                <th style="width: 220px;" class="num-col">Jumlah Biaya (Rp)</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-subtotal-summary"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- TAB 3: Normalized Work Items (Daftar Pekerjaan) -->
+    <section class="tab-panel" id="tab-pekerjaan">
+      <div class="rg-page-heading">
+        <div>
+          <span class="rg-eyebrow">RAB GUARD / WORKSPACE</span>
+          <h2>Daftar Pekerjaan</h2>
+          <p>Telusuri item hasil normalisasi dan periksa kembali nilai per baris.</p>
+        </div>
+      </div>
+      <div class="table-container">
+        <div class="table-header-bar" style="flex-wrap: wrap; gap: 12px;">
+          <div>
+            <h3 class="table-header-title">Daftar Item Pekerjaan Kanonikal</h3>
+            <p style="font-size: 12px; color: var(--text-muted);">Seluruh item pekerjaan yang telah dinormalisasi dari lembar kerja Excel aktif</p>
+          </div>
+          <div>
+            <input type="text" id="search-pekerjaan" aria-label="Cari item pekerjaan" placeholder="Cari uraian / kode pekerjaan..." style="padding: 6px 12px; border: 1px solid var(--border-strong); border-radius: 6px; font-size: 13px; min-width: 260px;">
+          </div>
+        </div>
+        <div class="table-responsive" style="max-height: 580px; overflow-y: auto;">
+          <table class="data-table" id="table-pekerjaan">
+            <thead>
+              <tr>
+                <th style="width: 50px;" class="center-col">No</th>
+                <th style="width: 90px;" class="center-col">Kode</th>
+                <th>Uraian Pekerjaan</th>
+                <th style="width: 100px;" class="num-col">Volume</th>
+                <th style="width: 70px;" class="center-col">Sat</th>
+                <th style="width: 150px;" class="num-col">Harga Satuan (Rp)</th>
+                <th style="width: 220px;" class="num-col">Jumlah Sumber / Hitung Ulang (Rp)</th>
+                <th style="width: 150px;" class="center-col">Sel / Formula</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-pekerjaan">
+              <tr><td colspan="8" class="center-col">Menunggu data pekerjaan...</td></tr>
+            </tbody>
+            <tfoot>
+              <tr style="background: #f8fafc;">
+                <td colspan="6" style="text-align: right;">TOTAL IMPOR BARIS TAMPIL (nilai sumber):</td>
+                <td class="num-col" id="foot-total-imported">Rp0</td>
+                <td></td>
+              </tr>
+              <tr style="background: #f1f5f9; font-weight: 700;">
+                <td colspan="6" style="text-align: right;">TOTAL HITUNG ULANG BARIS TAMPIL (volume × harga):</td>
+                <td class="num-col" id="foot-total-pekerjaan" style="color: var(--primary); font-size: 14px;">Rp0</td>
+                <td></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 4: Audit & Integritas -->
+    <section class="tab-panel" id="tab-audit">
+      <div class="rg-page-heading">
+        <div>
+          <span class="rg-eyebrow">RAB GUARD / WORKSPACE</span>
+          <h2>Pemeriksaan & Audit</h2>
+          <p>Tinjau temuan, tingkat keparahan, bukti, dan saran investigasi.</p>
+        </div>
+      </div>
+
+      <div class="table-container" id="univ-audit-report-summary" style="padding: 16px; margin-bottom: 20px;">
+        <h3 class="table-header-title" style="margin: 0 0 12px;">Ringkasan Laporan Audit</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 10px 18px;">
+          <div><small>Workbook</small><div id="univ-report-filename">Belum ada workbook</div></div>
+          <div><small>Lembar terpilih</small><div id="univ-report-sheet">-</div></div>
+          <div><small>Item pekerjaan</small><div id="univ-report-items">-</div></div>
+          <div><small>Cakupan perhitungan</small><div id="univ-report-coverage">-</div></div>
+          <div><small>Jumlah impor (nilai sumber)</small><div id="univ-report-imported">-</div></div>
+          <div><small>Jumlah hitung ulang</small><div id="univ-report-recalculated">-</div></div>
+          <div><small>Selisih item pembanding (hitung ulang − sumber)</small><div id="univ-report-difference">-</div></div>
+        </div>
+        <p id="univ-report-workbook-coverage" role="status" style="margin: 12px 0 0; font-size: 13px;"></p>
+        <ul id="univ-report-unresolved-sheets" style="margin: 4px 0 0; padding-left: 20px;"></ul>
+      </div>
+      
+      <!-- Metrics Cards -->
+      <div class="grid-cards gap-4" style="margin-bottom: 24px;">
+        <div class="card border-t-4 border-[var(--primary)] bg-white shadow-sm">
+          <div class="card-title">Total Temuan Audit</div>
+          <div class="card-value" id="univ-stat-total">0</div>
+          <div class="card-subtitle">Pemeriksaan aturan integritas aktif</div>
+        </div>
+        <div class="card" style="border-top: 4px solid var(--color-error);">
+          <div class="card-title">Kategori ERROR</div>
+          <div class="card-value" style="color: var(--color-error);" id="univ-stat-error">0</div>
+          <div class="card-subtitle">Deviasi hitungan / formula rusak</div>
+        </div>
+        <div class="card" style="border-top: 4px solid var(--color-tinjau);">
+          <div class="card-title">Kategori WARNING</div>
+          <div class="card-value" style="color: var(--color-tinjau);" id="univ-stat-warning">0</div>
+          <div class="card-subtitle">Perlu peninjauan teknis</div>
+        </div>
+        <div class="card" style="border-top: 4px solid #0284c7;">
+          <div class="card-title">Kategori INFO</div>
+          <div class="card-value" style="color: #0284c7;" id="univ-stat-info">0</div>
+          <div class="card-subtitle">Catatan informatif &amp; duplikasi</div>
+        </div>
+      </div>
+
+      <!-- Audit Findings Table -->
+      <div class="table-container">
+        <div class="table-header-bar" style="flex-wrap: wrap; gap: 12px;">
+          <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+            <h3 class="table-header-title">Daftar Temuan Hasil Audit Transparan</h3>
+            <div class="audit-filter-pills">
+              <button type="button" class="filter-pill active" data-univ-filter="all">Semua (<span id="pill-univ-count-all">0</span>)</button>
+              <button type="button" class="filter-pill" data-univ-filter="error">Error (<span id="pill-univ-count-error">0</span>)</button>
+              <button type="button" class="filter-pill" data-univ-filter="warning">Warning (<span id="pill-univ-count-warning">0</span>)</button>
+              <button type="button" class="filter-pill" data-univ-filter="info">Info (<span id="pill-univ-count-info">0</span>)</button>
+            </div>
+          </div>
+          <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+            <span id="univ-audit-filtered-count" aria-live="polite" style="font-size: 12px; color: var(--text-muted);">0 / 0 temuan</span>
+            <input type="text" id="univ-audit-search" aria-label="Cari temuan audit" placeholder="Cari item / aturan / sel..." style="padding: 6px 12px; border: 1px solid var(--border-strong); border-radius: 6px; font-size: 13px;">
+            <label for="univ-audit-sort" style="font-size: 12px;">Urutkan</label>
+            <select id="univ-audit-sort" aria-label="Urutkan temuan audit" style="padding: 6px 8px; border: 1px solid var(--border-strong); border-radius: 6px; font-size: 13px;">
+              <option value="source">Lokasi sumber</option>
+              <option value="severity">Keparahan</option>
+              <option value="original">Urutan temuan</option>
+            </select>
+            <select id="univ-audit-sheet-filter" aria-label="Filter worksheet sumber" style="padding: 6px 8px; border: 1px solid var(--border-strong); border-radius: 6px; font-size: 13px;" disabled>
+              <option value="all">Semua worksheet</option>
+            </select>
+            <select id="univ-audit-division-filter" aria-label="Filter divisi pekerjaan" style="padding: 6px 8px; border: 1px solid var(--border-strong); border-radius: 6px; font-size: 13px;" disabled>
+              <option value="all">Semua divisi</option>
+            </select>
+            <button type="button" class="tab-btn" id="btn-export-univ-audit" style="cursor: pointer;">📥 Unduh CSV Temuan</button>
+            <button type="button" class="tab-btn" id="btn-export-univ-related-items" style="cursor: pointer;">📥 Unduh CSV Item Terkait</button>
+            <button type="button" class="tab-btn" id="btn-export-univ-canonical" style="cursor: pointer;">📥 Unduh CSV Kanonikal</button>
+          </div>
+        </div>
+        <div class="table-responsive" style="max-height: 520px; overflow-y: auto;">
+          <table class="data-table" id="table-univ-findings">
+            <thead>
+              <tr>
+                <th style="width: 80px;">ID</th>
+                <th style="width: 85px;" class="center-col">Tingkat</th>
+                <th style="width: 170px;">Nama Aturan &amp; Kepastian</th>
+                <th>Uraian Temuan Teknis</th>
+                <th style="width: 120px;" class="num-col">Nilai Asli</th>
+                <th style="width: 120px;" class="num-col">Diharapkan</th>
+                <th style="width: 140px;" class="center-col">LOKASI SUMBER</th>
+                <th style="width: 230px;">Saran Investigasi &amp; Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-univ-findings">
+              <tr><td colspan="8" class="center-col">Belum ada temuan audit.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Embedded XLSX Source Viewer -->
+      <div id="audit-source-viewer" style="margin-top: 24px; min-height: 420px;"></div>
+
+    </section>
+
+    <!-- Universal Unit Consistency Engine -->
+    <section class="tab-panel" id="tab-unit-consistency" aria-labelledby="nav-btn-unit-consistency">
+      <div class="rg-page-heading">
+        <div>
+          <span class="rg-eyebrow">ANALISIS TAMBAHAN</span>
+          <h2>Pengecekan Satuan</h2>
+          <p>Meninjau label satuan, dimensi yang dikenali, dan variasi satuan pada pekerjaan yang dapat dibandingkan.</p>
+        </div>
+      </div>
+      <div class="card">
+        <p id="unit-consistency-status" role="status">Jalankan audit workbook untuk menganalisis satuan.</p>
+        <p id="unit-consistency-summary"></p>
+        <ul id="unit-consistency-warnings"></ul>
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead><tr><th>Tingkat</th><th>Temuan</th><th>Item dan konteks</th><th>Sumber</th><th>Tindakan</th></tr></thead>
+            <tbody id="tbody-unit-consistency-findings"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="tab-panel" id="tab-rab-comparison" aria-labelledby="nav-btn-rab-comparison">
+      <div class="rg-page-heading"><div>
+        <span class="rg-eyebrow">ANALISIS TAMBAHAN</span>
+        <h2>Komparasi RAB (CCO)</h2>
+        <p>Bandingkan dua workbook melalui ingestion Universal; baris dan nama sheet tidak digunakan sebagai identitas pekerjaan.</p>
+      </div></div>
+      <div class="card">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;">
+          <div><label for="comparison-file-a"><strong>RAB awal</strong></label><input id="comparison-file-a" type="file" accept=".xlsx,.xls,.xlsm,.xlsb" style="display:block;margin:8px 0;width:100%;"><p id="comparison-status-a" role="status">Pilih workbook awal.</p></div>
+          <div><label for="comparison-file-b"><strong>RAB perubahan</strong></label><input id="comparison-file-b" type="file" accept=".xlsx,.xls,.xlsm,.xlsb" style="display:block;margin:8px 0;width:100%;"><p id="comparison-status-b" role="status">Pilih workbook perubahan.</p></div>
+        </div>
+        <p id="comparison-error" role="alert" aria-live="polite"></p>
+        <button type="button" class="tab-btn active" id="btn-run-rab-comparison" disabled>Proses Komparasi</button>
+      </div>
+      <div id="comparison-results" class="card" style="display:none;margin-top:16px;">
+        <p id="comparison-result-status" role="status"></p>
+        <div id="comparison-summary" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;"></div>
+        <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:16px 0;"><label for="comparison-filter">Filter status perubahan</label>
+          <select id="comparison-filter"><option value="all">Semua</option><option value="matched">Pasangan pekerjaan</option><option value="added">Pekerjaan baru</option><option value="removed">Pekerjaan dihapus</option><option value="uncertain">Kandidat / perlu verifikasi</option><option value="split_merge">Kemungkinan pecah/gabung</option></select><span id="comparison-visible-count"></span>
+        </div>
+        <div class="table-responsive"><table class="data-table"><thead><tr><th>Status</th><th>Perubahan</th><th>Workbook A</th><th>Workbook B</th><th>Detail dan bukti</th></tr></thead><tbody id="comparison-rows"><tr><td colspan="5">Belum ada hasil komparasi.</td></tr></tbody></table></div>
+      </div>
+    </section>
+
+    <section class="tab-panel" id="tab-reporting" aria-labelledby="nav-btn-reporting">
+      <div class="rg-page-heading"><div>
+        <span class="rg-eyebrow">RAB GUARD / DOKUMEN</span>
+        <h2>Laporan &amp; Ekspor</h2>
+        <p>Bentuk laporan dari hasil analisis yang sudah tersimpan. Membuat laporan tidak menjalankan ulang audit atau komparasi.</p>
+      </div></div>
+      <div class="card" style="max-width:900px;">
+        <label for="report-type"><strong>Jenis laporan</strong></label>
+        <select id="report-type" class="form-control" style="display:block;max-width:420px;margin:8px 0 18px;">
+          <option value="audit">Laporan Audit RAB</option>
+          <option value="unit">Laporan Pengecekan Satuan</option>
+          <option value="comparison">Laporan Komparasi RAB (CCO)</option>
+          <option value="combined">Laporan Gabungan</option>
+        </select>
+        <p id="report-source" class="muted"></p>
+        <pre id="report-summary" aria-live="polite" style="white-space:pre-wrap;font:inherit;padding:12px;background:#f8fafc;border:1px solid #dbe3ec;border-radius:8px;min-height:56px;"></pre>
+        <p id="report-status" role="status" aria-live="polite">Belum tersedia hasil analisis untuk dilaporkan.</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <button type="button" class="tab-btn active" id="btn-report-preview">Pratinjau PDF / Cetak</button>
+          <button type="button" class="tab-btn" id="btn-report-xlsx">Unduh Excel</button>
+        </div>
+        <p class="muted" style="margin-top:12px;">PDF menggunakan pratinjau cetak lokal browser. Pilih “Cetak / Simpan sebagai PDF” pada pratinjau, lalu simpan ke perangkat.</p>
+      </div>
+    </section>
+
+    <section class="tab-panel" id="tab-material-logistics" aria-labelledby="nav-btn-material-logistics">
+      <div class="rg-page-heading"><div>
+        <span class="rg-eyebrow">RAB GUARD / ANALISIS TAMBAHAN</span>
+        <h2>Rekap Kebutuhan Material</h2>
+        <p>Kebutuhan teoritis dihitung dari volume BOQ dan koefisien AHSP yang berhasil ditautkan. Waste, stok, dan jumlah pengadaan tidak diasumsikan.</p>
+      </div></div>
+      <div class="card" style="margin-bottom:16px;">
+        <p><strong>Workbook:</strong> <span id="material-logistics-source">Belum ada workbook aktif.</span></p>
+        <p id="material-logistics-status" role="status" aria-live="polite">AHSP akan ditampilkan setelah normalisasi workbook.</p>
+        <button type="button" class="tab-btn" id="btn-run-material-logistics" disabled>Hitung Kebutuhan Material</button>
+        <p id="material-logistics-coverage" aria-live="polite"></p>
+      </div>
+      <h3>Rekap material terverifikasi</h3>
+      <div class="table-responsive"><table class="data-table"><thead><tr><th>Kode</th><th>Material</th><th>Spesifikasi</th><th>Satuan</th><th>Kebutuhan teoritis</th><th>Pekerjaan penyumbang</th></tr></thead><tbody id="tbody-material-logistics"><tr><td colspan="6">Jalankan analisis untuk melihat rekap.</td></tr></tbody></table></div>
+      <h3 style="margin-top:24px;">Detail kontribusi dan pencocokan pekerjaan</h3>
+      <div class="table-responsive"><table class="data-table"><thead><tr><th>Kode pekerjaan</th><th>Uraian BOQ</th><th>Status AHSP</th><th>Resource</th><th>Koefisien</th><th>Kuantitas / alasan</th><th>Referensi sumber</th></tr></thead><tbody id="tbody-material-logistics-details"><tr><td colspan="7">Belum ada hasil analisis.</td></tr></tbody></table></div>
+      <h3 style="margin-top:24px;">Pemetaan BOQ–AHSP dan kandidat</h3>
+      <div class="table-responsive"><table class="data-table"><thead><tr><th>Kode pekerjaan</th><th>Status</th><th>Kandidat AHSP / sumber</th><th>Alasan</th><th>Konfirmasi</th></tr></thead><tbody id="tbody-material-logistics-mappings"><tr><td colspan="5">Belum ada hasil analisis.</td></tr></tbody></table></div>
+      <h3 style="margin-top:24px;">Temuan yang memerlukan verifikasi</h3><ul id="material-logistics-findings"></ul>
+    </section>
+
+    <section class="tab-panel" id="tab-pricing-risk" aria-labelledby="nav-btn-pricing-risk">
+      <div class="rg-page-heading"><div><span class="rg-eyebrow">ANALISIS TAMBAHAN</span><h2>Analisis Ketimpangan Harga</h2><p>Perbandingan lokal menggunakan workbook yang Anda pilih. Hasil adalah indikator untuk ditinjau, bukan kesimpulan kecurangan.</p></div></div>
+      <div class="card" style="margin-bottom:16px;">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;">
+          <div><label for="pricing-risk-bid-file"><strong>Workbook penawaran / RAB</strong></label><input id="pricing-risk-bid-file" type="file" accept=".xlsx,.xls,.xlsm,.xlsb" style="display:block;width:100%;margin:8px 0;"></div>
+          <div><label for="pricing-risk-reference-file"><strong>Workbook pembanding</strong></label><input id="pricing-risk-reference-file" type="file" accept=".xlsx,.xls,.xlsm,.xlsb" style="display:block;width:100%;margin:8px 0;"><select id="pricing-risk-reference-type" aria-label="Jenis workbook pembanding"><option value="HPS">HPS</option><option value="ENGINEER_ESTIMATE">Engineer estimate</option><option value="INDEPENDENT_RAB">RAB independen</option><option value="USER_REFERENCE">Referensi pengguna</option></select></div>
+          <div><label for="pricing-risk-schedule-file"><strong>Jadwal (opsional)</strong></label><input id="pricing-risk-schedule-file" type="file" accept=".xlsx,.xls,.xlsm" style="display:block;width:100%;margin:8px 0;"><small>Perlu kolom periode, kode pekerjaan, dan kuantitas yang dapat dipetakan serta direkonsiliasi ke volume BOQ.</small></div>
+        </div>
+        <fieldset style="margin-top:14px;"><legend>Basis harga (isi per sumber bila diketahui; tidak ada normalisasi otomatis)</legend>
+          <strong>Penawaran</strong><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;"><label>Mata uang <input id="pricing-risk-bid-currency" type="text" placeholder="IDR"></label><label>Tahun dasar <input id="pricing-risk-bid-year" type="number" placeholder="Tahun"></label><label>Lokasi <input id="pricing-risk-bid-location" type="text" placeholder="Lokasi proyek"></label><label>Pajak termasuk <select id="pricing-risk-bid-tax"><option value="">Tidak diketahui</option><option value="yes">Ya</option><option value="no">Tidak</option></select></label><label>Overhead % <input id="pricing-risk-bid-overhead" type="number" step="any"></label><label>Profit % <input id="pricing-risk-bid-profit" type="number" step="any"></label><label>Diskon % <input id="pricing-risk-bid-discount" type="number" step="any"></label></div>
+          <strong style="display:block;margin-top:10px;">Pembanding</strong><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;"><label>Mata uang <input id="pricing-risk-ref-currency" type="text" placeholder="IDR"></label><label>Tahun dasar <input id="pricing-risk-ref-year" type="number" placeholder="Tahun"></label><label>Lokasi <input id="pricing-risk-ref-location" type="text" placeholder="Lokasi proyek"></label><label>Pajak termasuk <select id="pricing-risk-ref-tax"><option value="">Tidak diketahui</option><option value="yes">Ya</option><option value="no">Tidak</option></select></label><label>Overhead % <input id="pricing-risk-ref-overhead" type="number" step="any"></label><label>Profit % <input id="pricing-risk-ref-profit" type="number" step="any"></label><label>Diskon % <input id="pricing-risk-ref-discount" type="number" step="any"></label></div>
+        </fieldset>
+        <fieldset style="margin-top:12px;"><legend>Ambang indikator (opsional; ditentukan pengguna, bukan ketentuan resmi)</legend><div style="display:flex;gap:14px;flex-wrap:wrap;"><label>Penyimpangan harga satuan % <input id="pricing-risk-deviation-threshold" type="number" min="0" step="any" placeholder="Nonaktif"></label><label>Selisih pangsa periode awal % <input id="pricing-risk-front-threshold" type="number" min="0" step="any" placeholder="Nonaktif"></label><label>Jumlah periode awal <input id="pricing-risk-early-count" type="number" min="1" step="1" value="1"></label></div></fieldset>
+        <p id="pricing-risk-status" role="status" aria-live="polite">Pilih workbook penawaran dan pembanding. Semua pembacaan berlangsung lokal.</p><button type="button" class="tab-btn active" id="btn-run-pricing-risk">Analisis Ketimpangan Harga</button>
+      </div>
+      <div class="card"><p id="pricing-risk-summary" aria-live="polite">Belum ada hasil analisis.</p><p id="pricing-risk-front-loading" role="status">Front-loading: jadwal belum tersedia.</p><h3>Indikator dan temuan</h3><ul id="pricing-risk-indicators"></ul><div style="display:flex;gap:10px;flex-wrap:wrap;margin:12px 0;"><label for="pricing-risk-filter">Filter status</label><select id="pricing-risk-filter"><option value="all">Semua</option><option>EXACT_MATCH</option><option>HIGH_CONFIDENCE_MATCH</option><option>POSSIBLE_MATCH</option><option>AMBIGUOUS</option><option>NOT_FOUND</option><option>INCOMPATIBLE_UNIT</option><option>INCOMPARABLE_BASIS</option></select><label for="pricing-risk-search">Cari item</label><input id="pricing-risk-search" type="search"></div><p id="pricing-risk-count"></p><div class="table-responsive"><table class="data-table"><thead><tr><th>Status</th><th>Kode</th><th>Uraian</th><th>Sheet</th><th>Baris</th><th>Harga penawaran</th><th>Harga referensi</th><th>Delta unit</th><th>Deviasi</th><th>Dampak</th><th>Catatan</th></tr></thead><tbody id="pricing-risk-rows"><tr><td colspan="11">Belum ada hasil.</td></tr></tbody></table></div></div>
+    </section>
+
+    <!-- TAB 5: Simulasi Biaya -->
+    <section class="tab-panel" id="tab-simulasi">
+      <div class="rg-page-heading">
+        <div>
+          <span class="rg-eyebrow">RAB GUARD / WORKSPACE</span>
+          <h2>Simulasi Biaya</h2>
+          <p>Uji skenario perubahan harga tanpa mengubah data workbook asli.</p>
+        </div>
+      </div>
+      
+      <!-- Simulation Control Box -->
+      <div class="project-meta-box" style="background: #ffffff; border: 1px solid var(--border); margin-bottom: 24px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
+          <div>
+            <h3 style="font-size: 16px; font-weight: 700; color: var(--primary);">Simulasi Sensitivitas Biaya (Eskalasi Harga)</h3>
+            <p style="font-size: 13px; color: var(--text-muted);">Uji dampak kenaikan atau penurunan harga terhadap total anggaran secara fungsional tanpa memutasikan data asli</p>
+          </div>
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <label style="font-size: 13px; font-weight: 600;">Persentase Eskalasi:</label>
+            <input type="number" id="univ-sim-input-pct" value="10" step="1" min="-50" max="100" style="width: 70px; padding: 6px; border: 1px solid var(--border-strong); border-radius: 6px; text-align: right; font-weight: 700;">
+            <span style="font-weight: 700;">%</span>
+            <button type="button" class="tab-btn active" id="btn-apply-univ-sim" style="cursor: pointer;">Terapkan</button>
+            <button type="button" class="tab-btn" id="btn-reset-univ-sim" style="cursor: pointer;">Reset (0%)</button>
+          </div>
+        </div>
+
+        <div class="meta-grid">
+          <div class="meta-item">
+            <span class="meta-label">Total Dasar (sumber item + hitung ulang)</span>
+            <span class="meta-val" id="univ-sim-total-base">Rp0</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Total Anggaran Pasca-Simulasi</span>
+            <span class="meta-val" style="color: var(--primary); font-weight: 700;" id="univ-sim-total-sim">Rp0</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Selisih Nominal (Rp)</span>
+            <span class="meta-val" id="univ-sim-delta-rp">Rp0</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Persentase Perubahan</span>
+            <span class="meta-val" style="color: var(--color-tinjau); font-weight: 700;" id="univ-sim-delta-pct">0.00%</span>
+          </div>
+        </div>
+        <p id="univ-sim-coverage" class="card-subtitle" aria-live="polite">Cakupan simulasi belum dihitung.</p>
+      </div>
+
+      <!-- Pareto Top 10 Table -->
+      <div class="table-container">
+        <div class="table-header-bar">
+          <div>
+            <h4 style="font-size: 14px; font-weight: 700; color: var(--text-main);">Analisis Pareto: 10 Item Penentu Biaya Terbesar (Top Cost Drivers)</h4>
+            <p style="font-size: 12px; color: var(--text-muted);">Item-item dengan kontribusi biaya tertinggi yang paling sensitif terhadap fluktuasi harga pasar</p>
+          </div>
+          <span class="badge badge-offline">Kontributor Utama</span>
+        </div>
+        <div class="table-responsive">
+          <table class="data-table" id="table-univ-pareto">
+            <thead>
+              <tr>
+                <th style="width: 60px;" class="center-col">Rank</th>
+                <th style="width: 100px;">Kode</th>
+                <th>Uraian Pekerjaan</th>
+                <th style="width: 140px;">Kategori</th>
+                <th style="width: 170px;" class="num-col">Biaya Pasca-Simulasi (Rp)</th>
+                <th style="width: 100px;" class="num-col">Porsi (%)</th>
+                <th style="width: 120px;" class="num-col">Kumulatif (%)</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-univ-pareto">
+              <tr><td colspan="7" class="center-col">Memuat analisis Pareto...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- TAB 6: Masukan & Feedback Pengguna -->
+    <section class="tab-panel" id="tab-feedback">
+      <div class="rg-page-heading">
+        <div>
+          <span class="rg-eyebrow">RAB GUARD / WORKSPACE</span>
+          <h2>Masukan Pengguna</h2>
+          <p>Catat koreksi, false positive, dan usulan pengembangan produk.</p>
+        </div>
+      </div>
+
+      <div class="banner banner-info" style="margin-bottom: 24px;">
+        <strong>Pusat Masukan &amp; Evaluasi Pengguna (Lokal &amp; Sukarela):</strong>
+        Seluruh data penilaian dan laporan disimpan di penyimpanan lokal peramban Anda (<code>localStorage</code>). 
+        Anda dapat mengekspor berkas feedback secara sukarela untuk dikirimkan ke tim pengembang tanpa perantara backend.
+      </div>
+
+      <!-- 1. Rating Form -->
+      <div class="project-meta-box" style="margin-bottom: 24px;">
+        <h3 style="font-size: 15px; font-weight: 700; margin-bottom: 8px;">1. Berikan Penilaian Aplikasi</h3>
+        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 14px;">Apakah aplikasi RAB Guard membantu proses pemeriksaan anggaran Anda?</p>
+        
+        <div style="margin-bottom: 14px;">
+          <label style="font-size: 12px; font-weight: 600; display: block; margin-bottom: 6px;">Tingkat Kepuasan:</label>
+          <div class="star-rating" id="star-rating-box">
+            <span class="active" data-val="1">&#9733;</span>
+            <span class="active" data-val="2">&#9733;</span>
+            <span class="active" data-val="3">&#9733;</span>
+            <span class="active" data-val="4">&#9733;</span>
+            <span class="active" data-val="5">&#9733;</span>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 14px;">
+          <label style="font-size: 12px; font-weight: 600; display: block; margin-bottom: 6px;">Komentar / Kritik Membangun:</label>
+          <textarea id="feedback-comment" rows="3" placeholder="Tuliskan pengalaman Anda atau kendala yang dihadapi..." style="width: 100%; padding: 8px 12px; border: 1px solid var(--border-strong); border-radius: 6px; font-family: inherit; font-size: 13px;"></textarea>
+        </div>
+
+        <button type="button" class="tab-btn active" id="btn-submit-rating" style="cursor: pointer;">Simpan Penilaian Lokal</button>
+      </div>
+
+      <!-- 2. Lapor Kesalahan Pembacaan Excel -->
+      <div class="project-meta-box" style="margin-bottom: 24px;">
+        <h3 style="font-size: 15px; font-weight: 700; margin-bottom: 8px;">2. Lapor Kesalahan Pembacaan Berkas Excel</h3>
+        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 14px;">Laporkan jika sistem salah membaca sel, header, formula, atau nilai dari berkas spreadsheet Anda.</p>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 12px;">
+          <div>
+            <label style="font-size: 12px; font-weight: 600; display: block; margin-bottom: 4px;">Nama Sheet:</label>
+            <input type="text" id="issue-sheet" placeholder="Contoh: RAB_STRUKTUR" style="width: 100%; padding: 8px 10px; border: 1px solid var(--border-strong); border-radius: 6px; font-size: 13px;">
+          </div>
+          <div>
+            <label style="font-size: 12px; font-weight: 600; display: block; margin-bottom: 4px;">Sel / Rentang Terkait:</label>
+            <input type="text" id="issue-cell" placeholder="Contoh: F14 atau C5:F20" style="width: 100%; padding: 8px 10px; border: 1px solid var(--border-strong); border-radius: 6px; font-size: 13px;">
+          </div>
+        </div>
+
+        <div style="margin-bottom: 12px;">
+          <label style="font-size: 12px; font-weight: 600; display: block; margin-bottom: 4px;">Deskripsi Kesalahan:</label>
+          <input type="text" id="issue-desc" placeholder="Contoh: Kolom Jumlah terbaca 0 padahal di Excel ada rumus SUM" style="width: 100%; padding: 8px 10px; border: 1px solid var(--border-strong); border-radius: 6px; font-size: 13px;">
+        </div>
+
+        <div style="margin-bottom: 14px;">
+          <label style="font-size: 12px; font-weight: 600; display: block; margin-bottom: 4px;">Nilai / Hasil yang Seharusnya:</label>
+          <input type="text" id="issue-expected" placeholder="Contoh: Rp 28.500.000" style="width: 100%; padding: 8px 10px; border: 1px solid var(--border-strong); border-radius: 6px; font-size: 13px;">
+        </div>
+
+        <button type="button" class="tab-btn active" id="btn-submit-issue" style="cursor: pointer;">Simpan Laporan Issue</button>
+      </div>
+
+      <!-- 3. Usulan Aturan & Fitur Baru -->
+      <div class="project-meta-box" style="margin-bottom: 24px;">
+        <h3 style="font-size: 15px; font-weight: 700; margin-bottom: 8px;">3. Usulkan Aturan Audit atau Fitur Baru</h3>
+        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 14px;">Berikan ide aturan pemeriksaan baru sesuai praktik lapangan di instansi atau proyek Anda.</p>
+
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 12px; margin-bottom: 12px;">
+          <div>
+            <label style="font-size: 12px; font-weight: 600; display: block; margin-bottom: 4px;">Judul Usulan:</label>
+            <input type="text" id="prop-title" placeholder="Contoh: Deteksi batas maksimal koefisien upah pekerja" style="width: 100%; padding: 8px 10px; border: 1px solid var(--border-strong); border-radius: 6px; font-size: 13px;">
+          </div>
+          <div>
+            <label style="font-size: 12px; font-weight: 600; display: block; margin-bottom: 4px;">Kategori:</label>
+            <select id="prop-category" class="mapping-select" style="height: 38px;">
+              <option value="RULE">Aturan Audit Baru</option>
+              <option value="PARSER">Peningkatan Pembaca Excel</option>
+              <option value="SIMULATION">Fitur Simulasi</option>
+              <option value="UI">Tampilan &amp; Laporan</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 14px;">
+          <label style="font-size: 12px; font-weight: 600; display: block; margin-bottom: 4px;">Penjelasan Logika Aturan:</label>
+          <textarea id="prop-desc" rows="2" placeholder="Jelaskan dasar teknis atau standar acuan yang melandasi usulan ini..." style="width: 100%; padding: 8px 12px; border: 1px solid var(--border-strong); border-radius: 6px; font-family: inherit; font-size: 13px;"></textarea>
+        </div>
+
+        <button type="button" class="tab-btn active" id="btn-submit-prop" style="cursor: pointer;">Simpan Usulan</button>
+      </div>
+
+      <!-- 4. Daftar False Positive yang Ditandai -->
+      <div class="table-container" style="margin-bottom: 24px;">
+        <div class="table-header-bar">
+          <div>
+            <h4 style="font-size: 14px; font-weight: 700; color: var(--text-main);">Daftar Temuan yang Ditandai Sebagai False Positive</h4>
+            <p style="font-size: 12px; color: var(--text-muted);">Temuan audit yang Anda tandai sebagai wajar / disengaja / tidak relevan.</p>
+          </div>
+          <span class="badge badge-fp">Dikelola Pengguna</span>
+        </div>
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th style="width: 80px;">ID Temuan</th>
+                <th style="width: 150px;">Aturan</th>
+                <th>Uraian Temuan</th>
+                <th style="width: 260px;">Alasan Pengguna</th>
+                <th style="width: 90px;" class="center-col">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-false-positives">
+              <tr><td colspan="5" class="center-col">Belum ada temuan yang ditandai sebagai false positive.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 5. Ekspor Masukan Sukarela -->
+      <div class="project-meta-box" style="background: #ffffff; border: 1px solid var(--border);">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+          <div>
+            <h3 style="font-size: 15px; font-weight: 700;">4. Ekspor Berkas Masukan (Sukarela)</h3>
+            <p style="font-size: 13px; color: var(--text-muted);">Unduh data masukan untuk dikirimkan kepada pengembang atau disimpan sebagai arsip peninjauan.</p>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <button type="button" class="tab-btn" id="btn-export-feedback-json" style="cursor: pointer;">📥 Unduh JSON Feedback</button>
+            <button type="button" class="tab-btn" id="btn-export-feedback-csv" style="cursor: pointer;">📥 Unduh CSV Feedback</button>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="app-footer rg-footer">
+    <p>
+      <strong>RAB Guard</strong> &bull; Construction Cost Review &amp; Audit Platform &bull; 
+      Antarmuka pemeriksaan dan analisis workbook konstruksi
+    </p>
+  </footer>
+    </div><!-- /.rg-main-column -->
+  </div><!-- /.rg-app-shell -->
+
+  <!-- Scripts: Universal Ingestion, Audit Pipeline & Feedback -->
+  <script src="js/xlsx.full.min.js"></script>
+  <script src="js/ingestion/xlsx-reader.js"></script>
+  <script src="js/ingestion/workbook-inspector.js"></script>
+  <script src="js/ingestion/header-detector.js"></script>
+  <script src="js/ingestion/column-mapper.js"></script>
+  <script src="js/ingestion/data-normalizer.js"></script>
+  <script src="js/ingestion/ahsp-normalizer.js"></script>
+  <script src="js/ingestion/ingestion-validator.js"></script>
+  <script src="js/engines/analysis-engine-adapter.js"></script>
+<script src="js/engines/material-logistics-engine.js"></script>
+  <script src="js/engines/pricing-risk-engine.js"></script>
+  <script src="js/engines/unit-consistency-engine.js"></script>
+  <script src="js/engines/comparison-engine.js"></script>
+  <script src="js/engines/reporting-engine.js"></script>
+  <script src="js/universal-checker.js"></script>
+  <script src="js/universal-simulasi.js"></script>
+  <script src="data/test_workbooks/test-fixtures.js"></script>
+  <script src="js/user-feedback.js"></script>
+  <script src="js/wbs-engine.js"></script>
+  <script src="js/ui/source-viewer.js"></script>
+<script src="js/universal-ui.js"></script>
+<script src="js/engines/material-logistics-ui.js"></script>
+<script src="js/engines/pricing-risk-ui.js"></script>
+<script src="js/engines/comparison-ui.js"></script>
+<script src="js/engines/reporting-ui.js"></script>
+<script src="js/project-storage.js"></script>
+<script src="js/project-snapshot.js"></script>
+<script src="js/project-manager.js"></script>
+<script>
+(function () {
+  function bootProjectWorkspace() {
+    if (!window.ProjectStorage || !window.ProjectManager) {
+      console.error("[RAB Guard] Project Workspace modules are unavailable.");
+      return;
+    }
+
+    window.ProjectStorage.initDB()
+      .then(function (db) {
+        window.ProjectManager.init();
+
+        console.info(
+          "[RAB Guard] Project Workspace ready.",
+          "Database version:", db.version,
+          "Object stores:", Array.from(db.objectStoreNames)
+        );
+      })
+      .catch(function (error) {
+        console.error(
+          "[RAB Guard] Project Workspace initialization failed:",
+          error
+        );
+      });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", bootProjectWorkspace, { once: true });
+  } else {
+    bootProjectWorkspace();
+  }
+})();
+</script>
+
+</body>
+</html>
